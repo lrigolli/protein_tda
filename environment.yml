@@ -1,0 +1,11 @@
+name: tda_enz_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pandas
+  - scikit-learn
+  - matplotlib
+  - gudhi
+  - mdtraj
