@@ -1,0 +1,8 @@
+gudhi
+scikit-learn
+matplotlib
+pandas
+numpy
+mdtraj
+ipython
+# latex and cm-super
