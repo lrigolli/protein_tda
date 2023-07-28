@@ -8,7 +8,7 @@ The topological features we will consider are called homology groups and are top
 To give some intuition: if you have a piece of clay and you deform it without cutting or gluing pieces together what you will get is topologically equivalent to initial object and hence have same homology.
 
 *Example: a cup and a doughnut are topologically equivalent*  
-<img src="./cup_deformation.jpg" alt="drawing" width="800"/>
+<img src="./pictures_readme_tutorial/cup_deformation.jpg" alt="drawing" width="800"/>
 
   
 Informally speaking, homology counts the number of i-dimensional “holes” of the topological space.  
@@ -23,12 +23,12 @@ As toy example, a football (like a rugby ball, since these two are topologically
 - one dimensional 2-nd homology group (since the football is empty inside)
  
 *Example: on first column are displayed examples of 1-dim and 2-dim hole, while the objects in second and third columns can be continuously deformed to a point, hence their 1-dim and 2-dim homologies are trivial*  
-<img src="./holes.jpg" alt="drawing" width="800"/>  
+<img src="./pictures_readme_tutorial/holes.jpg" alt="drawing" width="800"/>  
 
 Homology is useful to describe topological spaces, but a cloud of points is not very interesting from a topological point of view: it is just a bunch of topologically trivial connected components with no 1 and 2 dimensional holes!  
 The idea behind Persistent Homology is building a family of non-trivial topological spaces originated from the point cloud and then computing the homology of these spaces. In this way PH allows the encode the evolving shape of a cloud of points.  
 
-<img src="./cloud_points_filtration.png" alt="drawing" width="800"/>
+<img src="./pictures_readme_tutorial/cloud_points_filtration.png" alt="drawing" width="800"/>
 
 
 
@@ -37,7 +37,7 @@ In this work we use PH to get insights on topological shape of macromolecules, i
 We describe molecules by 3d-coordinates of their atoms and define a familiy of topological spaces using euclidean distance as filtration. In simpler words we take atoms as points in 3d space, we create balls of zero radius centered in each atom and then inflate the balls by increasing their radius. In this way we are creating an increasing family of topological spaces and PH allows us to see how the topology of these spaces evolves.
 
 *Example: 3d representation of Epstein Barr virus gr42 protein. Edges (bonds) are useful for visualization but we will not use them for TDA encoding.*
-<img src="./epstein_barr_virus_gr42_protein.png" alt="drawing" width="800"/>  
+<img src="./pictures_readme_tutorial/epstein_barr_virus_gr42_protein.png" alt="drawing" width="800"/>  
 
 
 ### Protein encoding pipeline
@@ -57,13 +57,13 @@ In our case, data are 3d-objects and by using Euclidean distance as filtration w
 Topology of proteins with quaternary structure can be quite interesting (e.g forming rings, cages, etc, see [1](https://pubs.rsc.org/en/content/articlelanding/2016/cs/c5cs00157a) and [2](https://nanoconvergencejournal.springeropen.com/articles/10.1186/s40580-021-00294-3)) and that's the main reason for focusing on protein assemblies rather than on proteins formed by a single unit.  
 
 *Example: haemoglobin quaternary structure is made by four subunits*
-<img src="./haemoglobin.png" alt="drawing" width="600" height="400"/>  
+<img src="./pictures_readme_tutorial/haemoglobin.png" alt="drawing" width="600" height="400"/>  
 
 
 *Rmk*: [single unit proteins can be knotted](https://www.technologyreview.com/2016/10/26/156418/the-mystery-of-knotted-proteins/), but this is not detected by PH, since all knots in 3d Euclidean space are homotopy equivalent to the unknot (circle).  
 
 *Example: knotted single unit protein*
-<img src="./knotted_protein.png" alt="drawing" width="800"/>  
+<img src="./pictures_readme_tutorial/knotted_protein.png" alt="drawing" width="800"/>  
 
 
 
@@ -73,7 +73,7 @@ Rips-Vietoris complexes are often used to transition from original to simpler sp
 This is not optimal as sacrifices some interpretability, what we will do instead is relying on alpha complexes, for which Nerve theorem applies, without the need of approximations.  
 
 *Example: comparison of different tools used to compute PH*
-<img src="./alpha_rips_complexes.png" alt="drawing" width="800" height="400"/> 
+<img src="./pictures_readme_tutorial/alpha_rips_complexes.png" alt="drawing" width="800" height="400"/> 
 
 We notice that encoding proteins via their atoms 3d-coordinates allows us to encode as much topological information as possible, without bothering to compute homology in higher dimensions, which in general is much more domputationally expensive; indeed in this setting homology is non-trivial only in dimensions 0, 1 and 2.
 
@@ -83,7 +83,7 @@ We notice that encoding proteins via their atoms 3d-coordinates allows us to enc
 PH can be encoded in various equivalent ways: common choices are barcodes, persistence diagrams and persistence landscapes.  
 
 *Example: PH representation as barcode and persistence diagram*
-<img src="./persistence_representation.png" alt="drawing" width="800" height="400"/> 
+<img src="./pictures_readme_tutorial/persistence_representation.png" alt="drawing" width="800" height="400"/> 
 
 Efficiently encoding PH information for ML tasks is an active research topic; in this work we use barcode representation to vectorize 0-dimensional PH, while for 1 and 2 dimensional PH we consider landscape representation as periodic curve and then be approximate it as Fourier series.  
 
@@ -95,7 +95,7 @@ Efficiently encoding PH information for ML tasks is an active research topic; in
 Dimension 0 encoding requires 5 variables, while dimensions 1 and 2 require 39 = 3 \* [(5 \*2 + 1) + 2] each. In total each protein is encoded by 83 = (39\*2) + 5 variables.
 
 *Example: first three landscapes in dim 1 for PDB protein 1A1M*
-<img src="./1A1M_land_dim1.png" alt="drawing" width="800" height="400"/> 
+<img src="./pictures_readme_tutorial/1A1M_land_dim1.png" alt="drawing" width="800" height="400"/> 
 
 
 ## Applications
