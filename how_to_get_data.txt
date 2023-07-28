@@ -1,0 +1,10 @@
+Each PDB_ID entry in 'data/pdb_ids/proteins_assembly.txt' correspond to a protein assembly comprising at least three
+ distinct protein subunits.
+Those PDB_IDs were obtained in June 2023 from RCBS database (https://www.rcsb.org/search/advanced , it has approximately
+ 200k entries) by running the following query:
+
+
+ Polymer Molecular Features
+# Number of Distinct Protein Entities > 2 AND ( Polymer Entity Type NOT = "DNA" AND ( Polymer Entity Type NOT = "RNA" AND Polymer Entity Type NOT = "NA-hybrid" ) )
+'Number of Distinct Protein Entities' can be found under 'Entry Features' section
+'Polymer Entity Type' can be found under 'Polymer Molecular Features' section

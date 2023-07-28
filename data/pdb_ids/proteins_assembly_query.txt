@@ -1,2 +1,0 @@
-each entry in macromolecular assembly txt file has at least 3 distinct proteins and does not contain RNA or DNA
-query: Number of Distinct Protein Entities > 2 AND ( Polymer Entity Type NOT = "DNA" AND ( Polymer Entity Type NOT = "RNA" AND Polymer Entity Type NOT = "NA-hybrid" ) )
