@@ -14,6 +14,7 @@ def download_pdb_from_id(data_type):
     print(f"Download {data_type} PDB files")
     os.system(f" ./data/batch_download.sh -f data/pdb_ids/{data_type}.txt -p")
     pdb_files = [file for file in os.listdir() if '.pdb' in file]
+    os.makedirs(name=f"data/{data_type}", exist_ok=True)
     for file in pdb_files:
         os.replace(file, f"data/{data_type}/{file}")
 
@@ -51,7 +52,8 @@ def extract_3dcoords_helper(chunk_idx, data, files_parent_dir, output_coord_file
 def extract_3dcoords_from_pdb(data_type):
     path_dir = f"data/{data_type}/"
     # Make sure there are no unzipped files
-    os.remove(f"{path_dir}*.pdb")
+    if os.path.exists(f"{path_dir}*.pdb"):
+        os.remove(f"{path_dir}*.pdb")
     pdb_zipped_files = [file for file in np.sort(os.listdir(path_dir)) if '.pdb.gz' in file]
 
     # Create a directory to store coordinates
