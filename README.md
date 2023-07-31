@@ -2,7 +2,7 @@
 
 
 ## TDA overview
-Topological Data Analysis (TDA) is an approach to the analysis of datasets using well established techniques from topology. In what follows we try to give intuitive but far from rigorous explainations of concepts we use, the interested reader can refer to other material like this [TDA survey for data scientists](https://www.frontiersin.org/articles/10.3389/frai.2021.667963/full) for precise definitions and for a comphrensive overview of the topic.      
+Topological Data Analysis (TDA) is an approach to the analysis of datasets using well established techniques from topology. In what follows we try to give intuitive but far from rigorous explainations of concepts we use, the interested reader can refer to other material like this [TDA survey for data scientists](https://www.frontiersin.org/articles/10.3389/frai.2021.667963/full) for precise definitions and for a comphrensive overview of the topic. An excellent resource to get hand on the topic by doing actual PH computation is [GUDHI](https://github.com/GUDHI/TDA-tutorial) documentation, including tutorials.
 One of main tools of TDA is Persistence Homology (PH), which allows to encode multiscale topological features of datasets.  
 The topological features we will consider are called homology groups and are topological invariants, namely they are not changed by continuous deformation of the topological space under consideration.  
 To give some intuition: if you have a piece of clay and you deform it without cutting or gluing pieces together what you will get is topologically equivalent to initial object and hence have same homology.
@@ -106,15 +106,15 @@ To do that we define a metric on the space of vectorized proteins (the distance 
 This is just one small application but there can be many, if you have any suggestions feel free to reach out! 
 
 
-
-------- WIP ---------  
-
-TODO (in progress): add application details.
+[//]: # (TODO : add application details )
+[//]: # (TODO: most of biggest assemblies cannot be downloaded...is it because of old pdb format? )
 
 
 
 
 [//]: # ( TODO: add other works on different filtrations and diff homologies...)
+
+[//]: # ( -invariant by isomteries like translation, rotation etc - limitations: encodes shape not )
 
 
 
@@ -122,25 +122,34 @@ TODO (in progress): add application details.
 
 ## Project set up
 
-Software
-All PH computations as well as persistence barcodes and landscapes visualization is done using GUDHI library.
+1) Clone git repo 
+
+2) Create conda environment 
+ > conda env create --file=environments.yml  
+ 
+3) Add conda environment kernel to jupyter by activating conda environment and running
+ > python -m ipykernel install --user --name tda\_enz\_env --display-name 'tda\_enz\_env'
+ 
+## Encoding pipeline run
+The protein encoding pipeline takes PDB-ids from [protein_assembly.txt](https://github.com/lrigolli/protein_tda/tree/main/pdb_ids/protein_assembly.txt), download corresponding PDB files, extract 3D coordinates from each file and finally encode coordinates using TDA.
+
+Pipeline can be triggered using this [notebok](https://github.com/lrigolli/protein_tda/tree/main/notebooks/protein_encoding.ipynb) or by running 'tda\_encoding\_pipeline' script directly from python shell.
+
+If you are interested in encoding proteins other than assemblies you should find their PDB IDs by quering to PDB database (see [here](https://github.com/lrigolli/protein_tda/blob/main/how_to_get_data.txt) for more details) and store them as txt file in [here](https://github.com/lrigolli/protein_tda/tree/main/data/pdb_ids).
 
 
-
-Computational time
-The most computational intensive part of the process is computing PH, which usually takes few seconds and took *** minutes on a 2.3 GHz MacBook Pro laptop from 2017 to few minutes for proteins having thousands of atoms on a single core of a laptop)
-
+### Requirements
+Main requirement for encoding pipeline is [GUDHI](https://github.com/GUDHI/TDA-tutorial) library, which is used for all PH computations and visualization.
 
 
+### Computational time
+The most computational intensive part of the process is computing PH, which usually takes few seconds. As example, it takes less than one minute to encode '6GYB' PDB entry which is one of the biggest in considered data (it has about 60k atoms) on a 2.3 GHz, 8GB RAM MacBook Pro laptop from 2017.
+
+## Applications
+Featurizing all protein assemblies can take some time, luckily for applications there is no need to do more than once. For convenience you can download the vectorized proteins, as well as their obtained persistence diagrams and landscapes from [here](https://drive.google.com/drive/folders/1Y1qFJvhtq4VUSEV7cY4jjYMyb_AfFEMX) and move them in output directory of your cloned git project.  
+Once this is done you can explore this [notebook](https://github.com/lrigolli/protein_tda/tree/main/notebooks/protein_classification.ipynb)
+
+[//]: # (TODO: Give more details on notebook!)
 
 
-
-Create virtual env
-Install requirements using pip from requirements.txt file
-
-
-
-What 
- -invariant by isomteries like translation, rotation etc
- - limitations: encodes shape not 
 
