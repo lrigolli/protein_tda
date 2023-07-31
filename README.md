@@ -2,7 +2,7 @@
 
 
 ## TDA overview
-Topological Data Analysis (TDA) is an approach to the analysis of datasets using well established techniques from topology. In what follows we try to give intuitive but far from rigorous explainations of concepts we use, the interested reader can refer to other material like this [TDA survey for data scientists](https://www.frontiersin.org/articles/10.3389/frai.2021.667963/full) for precise definitions and for a comphrensive overview of the topic. An excellent resource to get hand on the topic by doing actual PH computation is [GUDHI](https://github.com/GUDHI/TDA-tutorial) documentation, including tutorials.
+Topological Data Analysis (TDA) is an approach to the analysis of datasets using well established techniques from topology. In what follows we try to give intuitive but far from rigorous explanations of concepts we use, the interested reader can refer to other material like this [TDA survey for data scientists](https://www.frontiersin.org/articles/10.3389/frai.2021.667963/full) for precise definitions and for a comprehensive overview of the topic. An excellent resource to get hand on the topic by doing actual computations is [GUDHI](https://github.com/GUDHI/TDA-tutorial) documentation, including tutorials.
 One of main tools of TDA is Persistence Homology (PH), which allows to encode multiscale topological features of datasets.  
 The topological features we will consider are called homology groups and are topological invariants, namely they are not changed by continuous deformation of the topological space under consideration.  
 To give some intuition: if you have a piece of clay and you deform it without cutting or gluing pieces together what you will get is topologically equivalent to initial object and hence have same homology.
@@ -19,7 +19,7 @@ We can define one homology group for each space dimension, in particular in what
 
 As toy example, a football (like a rugby ball, since these two are topologically equivalent) has:  
 - one dimensional 0-th homology group (since it is connected)  
-- zero dimensional 1-st homology group (if it had an hole you could not play!)  
+- zero dimensional 1-st homology group (if it had a hole you could not play!)  
 - one dimensional 2-nd homology group (since the football is empty inside)
  
 *Example: on first column are displayed examples of 1-dim and 2-dim hole, while the objects in second and third columns can be continuously deformed to a point, hence their 1-dim and 2-dim homologies are trivial*  
