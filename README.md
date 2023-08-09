@@ -146,7 +146,7 @@ The protein encoding pipeline takes PDB-ids from [proteins_assembly.txt](https:/
 
 Pipeline can be triggered using this [notebook](https://github.com/lrigolli/protein_tda/tree/main/notebooks/protein_encoding.ipynb) or by running 'tda\_encoding\_pipeline' script directly from python shell.
 
-If you are interested in encoding proteins other than assemblies you should find their PDB IDs by querying to PDB database (see [here](https://github.com/lrigolli/protein_tda/blob/main/how_to_get_data.txt) for more details) and store them as txt file in [here](https://github.com/lrigolli/protein_tda/tree/main/data/pdb_ids).
+If you are interested in encoding proteins other than assemblies you should find their PDB IDs by querying to PDB database (see [here](https://github.com/lrigolli/protein_tda/blob/main/how_to_get_data.txt) for more details) and store them as txt file [here](https://github.com/lrigolli/protein_tda/tree/main/data/pdb_ids).
 
 
 ### Requirements
