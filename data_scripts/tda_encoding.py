@@ -54,7 +54,8 @@ def encode_land(land_all, domain, dim_land, num_landscapes, num_intervals_land, 
         # add some points to allow the landscape to go to zero more smoothly
         num_points_add_left = np.min([20, num_points_cut_left])
         num_points_add_right = np.min([20, num_points_cut_right])
-        num_domain_land_points = num_intervals_land + 1 - num_points_cut_left - num_points_cut_right + num_points_add_left + num_points_add_right
+        num_domain_land_points = (num_intervals_land + 1 - num_points_cut_left - num_points_cut_right +
+                                  num_points_add_left + num_points_add_right)
 
         land_domain = domain[num_points_cut_left - num_points_add_left:
                              num_points_cut_left - num_points_add_left + num_domain_land_points]
@@ -233,7 +234,8 @@ def read_protein3d_helper(chunk_idx, data):
 def get_encoded_proteins_from_coords(data_type):
     num_workers = multiprocessing.cpu_count() - 1
     print(f"Encode proteins using TDA")
-    coord_files = [f"data/{data_type}_coord/{f}" for f in os.listdir(f'data/{data_type}_coord') if f"protein_coords_" in f]
+    coord_files = [f"data/{data_type}_coord/{f}" for f in os.listdir(f'data/{data_type}_coord') if
+                   f"protein_coords_" in f]
 
     # Split coordinate files in multiple lists to allow parallel computation
     coord_files_split = np.array_split(coord_files, num_workers)

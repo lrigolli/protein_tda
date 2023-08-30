@@ -12,7 +12,7 @@ for any $n$ positive integer.
 See https://mathworld.wolfram.com/FourierSeries.html eqs 17-18-19"""
 
 
-def  evaluate_fourier_series(x, L, fourier_coefs):
+def evaluate_fourier_series(x, L, fourier_coefs):
     """
     Evaluate Fourier series on domain [0,2L]
     :param x: interval of points

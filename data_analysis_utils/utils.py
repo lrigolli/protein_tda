@@ -106,6 +106,6 @@ def outlier_removal(df, cols_outliers_check, ratio_outliers_remove=0.1):
 
 def check_features_distribution(df, features_var_dict_dim_land):
     for key in features_var_dict_dim_land.keys():
-        df[features_var_dict_dim_land[key]].hist(figsize=(10,10))
+        df[features_var_dict_dim_land[key]].hist(figsize=(10, 10))
         print(key)
         plt.show()

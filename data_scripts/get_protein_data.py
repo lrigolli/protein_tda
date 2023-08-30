@@ -48,7 +48,6 @@ def extract_3dcoords_helper(chunk_idx, data, files_parent_dir, output_coord_file
                                    output_coord_filename=f"{output_coord_filename}_{chunk_idx}.json")
 
 
- # f'{path_dir_coord}/protein_coords'
 def extract_3dcoords_from_pdb(data_type):
     path_dir = f"data/{data_type}/"
     # Make sure there are no unzipped files
