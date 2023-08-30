@@ -10,3 +10,5 @@ dependencies:
   - gudhi
   - mdtraj
   - ipykernel
+  - seaborn
+  - hdbscan

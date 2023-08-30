@@ -1,156 +1,115 @@
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+from scipy import integrate
+from data_scripts.fourier_expansion import evaluate_fourier_series
 
 
-def dist_land_shape(x, y):
-    # this is just L^2 distance between the curves described by Fourier coefficients
-    return np.linalg.norm(x-y)
+def compute_landscapes_l1_distance(land1_enc, land2_enc, diagnostic=False):
+    # land1_enc is dictionary having 'begin', 'end', 'a0','a1',...'an','b0', 'b1', ..., 'bn' as keys.
+    # The first two are float values (start, end point of domain and Fourier coefficients of nonzero landscape)
 
+    # Get domain on which at least one of the landscapes is non zero
+    x = np.linspace(np.min([land1_enc['begin'], land2_enc['begin']]), np.max([land1_enc['end'], land2_enc['end']]),
+                    128 + 1)
 
-def dist_land_begin_end(x, y):
-    return np.mean(np.abs(x-y))
+    # Define both landscapes values on common set of equispaced points
+    x1_num_zero_left = sum(x < land1_enc['begin'])
+    x1_num_zero_right = sum(x > land1_enc['end'])
+    x1_nonzero = x[x1_num_zero_left:len(x) - x1_num_zero_right]
+    L1 = np.abs(x1_nonzero[0] - x1_nonzero[-1]) / 2
+    del land1_enc['begin']
+    del land1_enc['end']
+    y1_nonzero = evaluate_fourier_series(x=x1_nonzero, L=L1, fourier_coefs=land1_enc)
+    y1 = np.concatenate([np.array([0] * x1_num_zero_left), y1_nonzero, np.array([0] * x1_num_zero_right)])
 
+    x2_num_zero_left = sum(x < land2_enc['begin'])
+    x2_num_zero_right = sum(x > land2_enc['end'])
+    x2_nonzero = x[x2_num_zero_left:len(x) - x2_num_zero_right]
+    L2 = np.abs(x2_nonzero[0] - x2_nonzero[-1]) / 2
+    del land2_enc['begin']
+    del land2_enc['end']
+    y2_nonzero = evaluate_fourier_series(x=x2_nonzero, L=L2, fourier_coefs=land2_enc)
+    y2 = np.concatenate([np.array([0] * x2_num_zero_left), y2_nonzero, np.array([0] * x2_num_zero_right)])
 
-def dist_dim0(x, y):
-    # compute mean absolute distance. don't use Euclidean distance since don't want it to depend on numner of features
-    # used to encode dim0
-    return np.mean(np.abs(x-y))
+    # L^1 distance is integral of absolute value of difference between y1 and y2
+    y_diff = np.abs(y1 - y2)
 
-
-def pairwise_dist(df, dict_features_var_dims_lands):
-    # w weight in [0,1] for average land
-    # for the moment give same importance to shape and start/end of landscape
-    # (do further analysis to determine which weight makes more sense)
-    # Compute similarity between pair of samples
-    num_samples = df.shape[0]
-
-    pair_dist_dict = {}
-    samples_dict = {}
-    for key in dict_features_var_dims_lands.keys():
-        samples_dict[f"mat_{key}"] = df[dict_features_var_dims_lands[key]].values
-        pair_dist_dict[f"pair_dist_{key}"] = np.zeros([num_samples, num_samples])
-
-    for key_sample, key_dist in zip(samples_dict.keys(), pair_dist_dict.keys()):
-        m_sample = samples_dict[key_sample]
-        m_dist_half = pair_dist_dict[key_dist]
-        for i in range(num_samples):
-            for j in range(num_samples):
-                if j < i:
-                    if 'dim0' in key_sample:
-                        m_dist_half[i, j] = dist_dim0(m_sample[i, :], m_sample[j, :])
-                    elif 'shape' in key_sample:
-                        m_dist_half[i, j] = dist_land_shape(m_sample[i, :], m_sample[j, :])
-                    elif 'begin_end' in key_sample:
-                        m_dist_half[i, j] = dist_land_begin_end(m_sample[i, :], m_sample[j, :])
-                    else:
-                        m_dist_half[i, j] = m_dist_half[i, j]
-        m_dist = m_dist_half + np.transpose(m_dist_half)
-        df_pair_dist = pd.DataFrame(data=m_dist, index=df['pdb_id'].values, columns=df['pdb_id'].values)
-        pair_dist_dict[key_dist] = df_pair_dist
-    return pair_dist_dict
-
-
-def aggregate_metrics_dim(pair_dist_dict):
-    pair_dist_dict_dims = {}
-    counter_dim1_shape = 0
-    counter_dim1_extrema = 0
-    counter_dim2_shape = 0
-    counter_dim2_extrema = 0
-    for key in pair_dist_dict.keys():
-        # aggregate dim 0
-        if 'dim0' in key:
-            pair_dist_dict_dims['dim0'] = pair_dist_dict[key]
-        # aggregate shape in dim 1
-        if 'dim1' in key:
-            if 'shape' in key:
-                # normalize values
-                df_normalized_dim1_shape = pair_dist_dict[key] / np.mean(np.mean(pair_dist_dict[key], axis=0))
-                if counter_dim1_shape > 0:
-                    df_agg_dim1_shape += (1 / 3) * df_normalized_dim1_shape
-                else:
-                    df_agg_dim1_shape = (1 / 3) * df_normalized_dim1_shape
-                    counter_dim1_shape += 1
-            if 'begin_end' in key:
-                # normalize values
-                df_normalized_dim1_extrema = pair_dist_dict[key] / np.mean(np.mean(pair_dist_dict[key], axis=0))
-                if counter_dim1_extrema > 0:
-                    df_agg_dim1_extrema += (1 / 3) * df_normalized_dim1_extrema
-                else:
-                    df_agg_dim1_extrema = (1 / 3) * df_normalized_dim1_extrema
-                    counter_dim1_extrema += 1
-
-        # aggregate shape in dim 2
-        if 'dim2' in key:
-            if 'shape' in key:
-                # normalize values
-                df_normalized_dim2_shape = pair_dist_dict[key] / np.mean(np.mean(pair_dist_dict[key], axis=0))
-                if counter_dim2_shape > 0:
-                    df_agg_dim2_shape += (1 / 3) * df_normalized_dim2_shape
-                else:
-                    df_agg_dim2_shape = (1 / 3) * df_normalized_dim2_shape
-                    counter_dim2_shape += 1
-            if 'begin_end' in key:
-                # normalize values
-                df_normalized_dim2_extrema = pair_dist_dict[key] / np.mean(np.mean(pair_dist_dict[key], axis=0))
-                if counter_dim2_extrema > 0:
-                    df_agg_dim2_extrema += (1 / 3) * df_normalized_dim2_extrema
-                else:
-                    df_agg_dim2_extrema = (1 / 3) * df_normalized_dim2_extrema
-                    counter_dim2_extrema += 1
-
-    # aggregate shape and begin_end in dim_1 and 2
-    pair_dist_dict_dims['dim1'] = (1 / 2) * (df_agg_dim1_shape + df_agg_dim1_extrema)
-    pair_dist_dict_dims['dim2'] = (1 / 2) * (df_agg_dim2_shape + df_agg_dim2_extrema)
-    return pair_dist_dict_dims
-
-
-def aggregate_metrics_all(pair_dist_dict_dims):
-    df_normalized_dim0 = pair_dist_dict_dims['dim0']/np.mean(np.mean(pair_dist_dict_dims['dim0'], axis=0))
-    return (df_normalized_dim0 + pair_dist_dict_dims['dim1'] + pair_dist_dict_dims['dim2'])/3
-
-
-def get_samples_low_high_pos_dist(df_pair_dist, low=True, n=5):
-    # get top n closest/furthest proteins
-
-    # convert to matrix for faster computation
-    mat_pair_dist = df_pair_dist.values
-
-    # an array that stores each label in its corresponding index position in sim matrix
-    index_labels = df_pair_dist.index.to_numpy()
-
-    # get the top n indexes with highest/lowest similarity for each row in the matrix (i.e the 'reduced' matrix)
-    # first element is always 0 (similarity with itself), so we remove it
-    if low:
-        extreme_similarity_idxs = np.argsort(mat_pair_dist, axis=1)[:, 1:n + 1]
+    # Romberg method for integration is more accurate than trapezoid or Simpson when function is evaluated on 2^k + 1
+    # equispaced points
+    if np.log2(len(x) - 1) % 1 == 0:
+        l1_dist = integrate.romb(y_diff, dx=x[1] - x[0])
     else:
-        extreme_similarity_idxs = np.argsort(mat_pair_dist, axis=1)[:, -n:]
+        l1_dist = integrate.simpson(y_diff, x)
 
-    # get the labels of the highest similarity items
-    extreme_similarity_labels = index_labels[extreme_similarity_idxs]
+    if diagnostic:
+        fig = plt.figure()
+        plt.plot(x, y1, label='landscape1')
+        plt.plot(x, y2, label='landscape2')
+        plt.plot(x, y_diff, label='|landscape1-landscape2|')
+        plt.xlabel('x')
+        plt.ylabel('y')
+        plt.title('landscapes l1 distance')
+        plt.legend()
+        fig.show()
 
-    # get the actual similarity values for each row
-    extreme_similarity_values = np.take_along_axis(mat_pair_dist, extreme_similarity_idxs, axis=1)
-
-    # convert into a df
-    data = {
-        'pdb_id1': np.repeat(index_labels, n),
-        'pdb_id2': extreme_similarity_labels.flatten(),
-        'distance': extreme_similarity_values.flatten()
-    }
-    df = pd.DataFrame(data)
-    return df
+    return l1_dist
 
 
-def compare_pdb_pairwise_dist(pdb_id1, pdb_id2, dict_dist_no_aggr, dict_dist_aggr_dim, dist_aggr_global):
-    print(f'Distances between {pdb_id1} and {pdb_id2} \n')
+def pairwise_l1_dist(df, pdb_idxs):
+    df = df.reset_index(drop=True)
+    num_samples = df.shape[0]
+    m_dist_half = np.zeros([num_samples, num_samples])
+    for i in range(num_samples):
+        for j in range(num_samples):
+            if j < i:
+                m_dist_half[i, j] = compute_landscapes_l1_distance(land1_enc=dict(df.loc[i]), land2_enc=dict(df.loc[j]))
+    m_dist = m_dist_half + np.transpose(m_dist_half)
+    df_pair_dist = pd.DataFrame(data=m_dist, index=pdb_idxs, columns=pdb_idxs)
+    return df_pair_dist
 
-    print(f'No aggregation')
-    for k, v in zip(dict_dist_no_aggr.keys(), dict_dist_no_aggr.values()):
-        print(f'{k}:{v.loc[pdb_id1][pdb_id2]}')
 
-    print(f'\nAggregation at dimension level')
-    for k, v in zip(dict_dist_aggr_dim.keys(), dict_dist_aggr_dim.values()):
-        print(f'{k}:{v.loc[pdb_id1][pdb_id2]}')
+def pairwise_l1_dist_dim(df, dim, grouped_feat_var):
+    pairwise_l1_dist_dict = dict()
+    for dim_land in [f'dim{dim}_land1', f'dim{dim}_land2', f'dim{dim}_land3']:
+        df_dim_land = df[grouped_feat_var['features_var_dict_dim_land'][dim_land]]
+        df_dim_land.columns = [col.split('_')[0][:-1] for col in df_dim_land.columns]
+        df_pair_l1dist_land_dim = pairwise_l1_dist(df=df_dim_land, pdb_idxs=df['pdb_id'].values)
+        pairwise_l1_dist_dict[dim_land] = df_pair_l1dist_land_dim
+    return pairwise_l1_dist_dict
 
-    print(f'\nGlobal aggregation')
-    print(f'dim_all:{dist_aggr_global.loc[pdb_id1][pdb_id2]}')
+
+def get_discrete_pair_sim(df_cluster):
+    all_ids = df_cluster['pdb_ids'].sum()
+    num_ids = len(all_ids)
+    num_existing_ids = 0
+    blocks = []
+    for lab, ids in zip(df_cluster['label'], df_cluster['pdb_ids']):
+        if lab == -1:
+            block = [np.zeros([len(ids), num_existing_ids]),
+                     np.eye(len(ids)),
+                     np.zeros([len(ids), num_ids-num_existing_ids-len(ids)])]
+        else:
+            block = [np.zeros([len(ids), num_existing_ids]),
+                     np.ones([len(ids), len(ids)]),
+                     np.zeros([len(ids), num_ids-num_existing_ids-len(ids)])]
+        num_existing_ids += len(ids)
+        blocks.append(block)
+    df_pair_sim = pd.DataFrame(data=np.block(blocks), index=all_ids, columns=all_ids)
+    return df_pair_sim
+
+
+def convert_clustering_matrix_to_df(df):
+    df_clust_dup = df.apply(lambda x: list(np.where(x == 2)[0]), axis=1)
+    dict_idx_pdb = dict(enumerate(list(df.columns)))
+    # Get list of clusters
+    clusters = []
+    for clust in df_clust_dup.values:
+        clust_pdb = [dict_idx_pdb[el] for el in clust]
+        if clust_pdb not in clusters:
+            clusters.append(clust_pdb)
+    # Store clusters in df
+    df_clust = pd.DataFrame(enumerate(clusters), columns=['label', 'cluster'])
+    df_clust['num_el'] = df_clust['cluster'].apply(lambda x: len(x))
+    df_clust = df_clust.sort_values(by=['num_el'], ascending=False)
+    return df_clust
