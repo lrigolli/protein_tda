@@ -158,9 +158,9 @@ The most computational intensive part of the process is computing PH, which usua
 
 ## Applications
 Featurizing all protein assemblies can take some time, luckily for applications there is no need to do more than once. For convenience you can download the vectorized proteins, as well as their obtained persistence diagrams and landscapes from [here](https://drive.google.com/drive/folders/1Y1qFJvhtq4VUSEV7cY4jjYMyb_AfFEMX) and move them in output directory of your cloned git project.  
-In this [notebook](https://github.com/lrigolli/protein_tda/tree/main/notebooks/protein_classification.ipynb) we define a distance between protein landscapes and use it to compute pairwise dissimilarity of proteins homologies in dimension 1 and 2. We then apply a clustering algorithm (HDBSCAN) to group together connected proteins (we infer if a protein is connected by looking at 0-dim PH) whose 1-dim and 2-dim homologies are close. In such a way we are able to cluster proteins according to their topological shape.
+In [notebook](https://github.com/lrigolli/protein_tda/tree/main/notebooks/protein_classification.ipynb) we define a distance between protein landscapes and use it to compute pairwise dissimilarity of proteins homologies in dimension 1 and 2. We then apply a clustering algorithm (HDBSCAN) to group together connected proteins (we infer if a protein is connected by looking at 0-dim PH) whose 1-dim and 2-dim homologies are close. In such a way we are able to cluster proteins according to their topological shape.
 
-In example below we show landscapes and 3d-structure of one of detected clusters, consisting of four proteins: 4NGE, 5NJ9, 5NJA, 5NJF.  
+In example below we show landscapes and 3d-structure of one of detected clusters, consisting of four proteins.  
 
 *First three 1-dim landscapes of 4NGE, 5NJ9, 5NJA, 5NJF*  
 <img src="./material_readme_tutorial/dim1_land_cluster.png" alt="drawing" width="800"/>  
