@@ -38,7 +38,7 @@ The idea behind Persistent Homology is building a family of non-trivial topologi
 
 ## PH for protein encoding
 In this work we use PH to get insights on topological shape of macromolecules, in particular of protein assemblies.  
-We describe molecules by 3d-coordinates of their atoms and define a family of topological spaces using euclidean distance as filtration. In simpler words we take atoms as points in 3d space, we create balls of zero radius centred in each atom and then inflate the balls by increasing their radius. In this way we are creating an increasing family of topological spaces and PH allows us to see how the topology of these spaces evolves.
+We describe molecules by 3d-coordinates of their atoms and define a family of topological spaces using euclidean distance as filtration. In simpler words we take atoms as points in 3d space, we create balls of zero radius centred in each atom and then inflate the balls by increasing their radius. In this way we are creating an increasing family of topological spaces and PH allows us to see how the topology of these spaces evolves. By doing this, PH is able to encode information not only on number of holes but also on their size.
 
 *Example: 3d representation of Epstein Barr virus gr42 protein. Edges (bonds) are useful for visualisations but we will not use them for TDA encoding.*
 <img src="./material_readme_tutorial/epstein_barr_virus_gr42_protein.png" alt="drawing" width="800"/>  
@@ -59,7 +59,7 @@ TDA can be applied to a huge variety of datasets, all it needs is a cloud of poi
 #### Topological shape of data  
 First questions to ask before applying TDA is whether we expect the data to have an interesting topological shape and if so, what can we do with it.  
 In our case, data are 3d-objects and by using Euclidean distance as filtration we retain an intuitive geometric interpretation of protein topological shape.  
-Topology of proteins with quaternary structure can be quite interesting (e.g forming rings, cages, etc, see [1](https://pubs.rsc.org/en/content/articlelanding/2016/cs/c5cs00157a) and [2](https://nanoconvergencejournal.springeropen.com/articles/10.1186/s40580-021-00294-3)) and that's the main reason for focusing on protein assemblies rather than on proteins formed by a single unit.  
+Topology of proteins with quaternary structure can be quite interesting (e.g forming rings, cages, etc, see [1](https://pubs.rsc.org/en/content/articlelanding/2016/cs/c5cs00157a) and [2](https://nanoconvergencejournal.springeropen.com/articles/10.1186/s40580-021-00294-3)) and that's the main reason for focusing first on protein assemblies rather than on proteins formed by a single unit.  
 
 *Example: haemoglobin quaternary structure is made by four subunits*
 <img src="./material_readme_tutorial/haemoglobin.png" alt="drawing" width="600" height="400"/>   
@@ -158,9 +158,21 @@ The most computational intensive part of the process is computing PH, which usua
 
 ## Applications
 Featurizing all protein assemblies can take some time, luckily for applications there is no need to do more than once. For convenience you can download the vectorized proteins, as well as their obtained persistence diagrams and landscapes from [here](https://drive.google.com/drive/folders/1Y1qFJvhtq4VUSEV7cY4jjYMyb_AfFEMX) and move them in output directory of your cloned git project.  
-Once this is done you can explore this [notebook](https://github.com/lrigolli/protein_tda/tree/main/notebooks/protein_classification.ipynb)
+In this [notebook](https://github.com/lrigolli/protein_tda/tree/main/notebooks/protein_classification.ipynb) we define a distance between protein landscapes and use it to compute pairwise dissimilarity of proteins homologies in dimension 1 and 2. We then apply a clustering algorithm (HDBSCAN) to group together connected proteins (we infer if a protein is connected by looking at 0-dim PH) whose 1-dim and 2-dim homologies are close. In such a way we are able to cluster proteins according to their topological shape.
 
-[//]: # (TODO: Give more details on notebook!)
+In example below we show landscapes and 3d-structure of one of detected clusters, consisting of four proteins: 4NGE, 5NJ9, 5NJA, 5NJF.  
+
+*First three 1-dim landscapes of 4NGE, 5NJ9, 5NJA, 5NJF*  
+<img src="./material_readme_tutorial/dim1_land_cluster.png" alt="drawing" width="800"/>  
+
+*First three 2-dim landscapes of 4NGE, 5NJ9, 5NJA, 5NJF*   
+<img src="./material_readme_tutorial/dim2_land_cluster.png" alt="drawing" width="800"/>  
+
+*3D structure of 4NGE, 5NJ9, 5NJA, 5NJF*   
+<img src="./material_readme_tutorial/3d_structure_cluster.png" alt="drawing" width="800"/>   
+*Image source: [RCBS website](https://www.rcsb.org/)*  
+
+
 
 
 
