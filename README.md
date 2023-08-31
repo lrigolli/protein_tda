@@ -111,8 +111,8 @@ Dimension 0 encoding requires 5 variables, while dimensions 1 and 2 require *num
 
 ## Applications
 The pipeline described above is quite general and can be used to get insights on the topological shapes of a variety of molecular 3d-structures, or in general of 3d-objects. What comes next is finding useful applications.  
-The application discussed here is classification of protein assemblies topological shapes.  
-To do that we define a metric on the space of vectorized proteins (the distance between two landscapes is defined in terms of area of the difference between the two curves), we compute pairwise distance between proteins and finally we fed this to a HDBSCAN clustering algorithm that creates cluster of proteins according to their shape.   
+The application discussed here is partitioning protein assemblies according to their topological shapes (recall that PH takes into account number of holes and their size).  
+We first define a metric on the space of vectorized proteins (the distance between two landscapes is defined in terms of area of the difference between the two curves), we then compute pairwise distance between proteins and finally we fed the distance matrix to HDBSCAN clustering algorithm which creates cluster of proteins according to their shape.   
 
 This is just one small application but there can be many, if you have any suggestions feel free to reach out! 
 
