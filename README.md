@@ -11,7 +11,6 @@ To give some intuition: if you have a piece of clay and you deform it without cu
 <img src="./material_readme_tutorial/cup_deformation.jpg" alt="drawing" width="800"/>  
 *Image source: picture by [Henry Segerman](https://math.okstate.edu/people/segerman)*  
 
-
   
 Informally speaking, homology counts the number of i-dimensional “holes” of the topological space.  
 We can define one homology group for each space dimension, in particular in what follows we will be interested in dimensions 0, 1 and 2, where homology groups count:  
@@ -109,29 +108,9 @@ Dimension 0 encoding requires 5 variables, while dimensions 1 and 2 require *num
 <img src="./material_readme_tutorial/1A1M_land_dim1.png" alt="drawing" width="800" height="400"/> 
 
 
-## Applications
-The pipeline described above is quite general and can be used to get insights on the topological shapes of a variety of molecular 3d-structures, or in general of 3d-objects. What comes next is finding useful applications.  
-The application discussed here is partitioning protein assemblies according to their topological shapes (recall that PH takes into account number of holes and their size).  
-We first define a metric on the space of vectorized proteins (the distance between two landscapes is defined in terms of area of the difference between the two curves), we then compute pairwise distance between proteins and finally we fed the distance matrix to HDBSCAN clustering algorithm which creates cluster of proteins according to their shape.   
+## Code
 
-This is just one small application but there can be many, if you have any suggestions feel free to reach out! 
-
-
-[//]: # (TODO : add application details )
-[//]: # (TODO: most of biggest assemblies cannot be downloaded...is it because of old pdb format? )
-
-
-
-
-[//]: # ( TODO: add other works on different filtrations and diff homologies...)
-
-[//]: # ( -invariant by isometries like translation, rotation etc - limitations: encodes shape not )
-
-
-
-# Code
-
-## Project set up
+### Project set up
 
 1) Clone git repo 
 
@@ -141,7 +120,7 @@ This is just one small application but there can be many, if you have any sugges
 3) Add conda environment kernel to jupyter by activating conda environment and running
  > python -m ipykernel install --user --name tda\_enz\_env --display-name 'tda\_enz\_env'
  
-## Encoding pipeline run
+### Encoding pipeline run
 The protein encoding pipeline takes PDB-ids from [proteins_assembly.txt](https://github.com/lrigolli/protein_tda/tree/main/data/pdb_ids/proteins_assembly.txt), download corresponding PDB files, extract 3D coordinates from each file and finally encode coordinates using TDA.
 
 Pipeline can be triggered using this [notebook](https://github.com/lrigolli/protein_tda/tree/main/notebooks/protein_encoding.ipynb) or by running 'tda\_encoding\_pipeline' script directly from python shell.
@@ -157,10 +136,11 @@ Main requirement for encoding pipeline is [GUDHI](https://github.com/GUDHI/TDA-t
 The most computational intensive part of the process is computing PH, which usually takes few seconds. As example, it takes less than one minute to encode '6GYB' PDB entry which is one of the biggest in considered data (it has about 60k atoms) on a 2.3 GHz, 8GB RAM MacBook Pro laptop from 2017.
 
 ## Applications
-Featurizing all protein assemblies can take some time, luckily for applications there is no need to do more than once. For convenience you can download the vectorized proteins, as well as their obtained persistence diagrams and landscapes from [here](https://drive.google.com/drive/folders/1Y1qFJvhtq4VUSEV7cY4jjYMyb_AfFEMX) and move them in output directory of your cloned git project.  
-In [notebook](https://github.com/lrigolli/protein_tda/tree/main/notebooks/protein_classification.ipynb) we define a distance between protein landscapes and use it to compute pairwise dissimilarity of proteins homologies in dimension 1 and 2. We then apply a clustering algorithm (HDBSCAN) to group together connected proteins (we infer if a protein is connected by looking at 0-dim PH) whose 1-dim and 2-dim homologies are close. In such a way we are able to cluster proteins according to their topological shape.
+The pipeline for protein encoding described above is quite general and can be used to get insights on the topological shapes of a variety of molecular 3d-structures, or in general of 3d-objects. What comes next is finding useful applications.  
+The application discussed here is partitioning protein assemblies according to their topological shapes (recall that PH takes into account number of holes and their size).  Notice that featurizing all protein assemblies can take some time, luckily for applications there is no need to do more than once (for convenience you can download the vectorized proteins, as well as their obtained persistence diagrams and landscapes from [here](https://drive.google.com/drive/folders/1Y1qFJvhtq4VUSEV7cY4jjYMyb_AfFEMX) and move them in output directory of your cloned git project).  
+In [notebook](https://github.com/lrigolli/protein_tda/tree/main/notebooks/protein_classification.ipynb) we define a distance between protein landscapes (distance between two landscapes is defined in terms of area of the difference between the two curves) and use it to compute pairwise dissimilarity of proteins PH in dimension 1 and 2. We then apply HDBSCAN clustering algorithm to group together connected proteins (we infer if a protein is connected by looking at 0-dim PH) whose 1-dim and 2-dim PH are close. In such a way we are able to cluster proteins according to their topological shape.
 
-In example below we show landscapes and 3d-structure of one of detected clusters, consisting of four proteins.  
+As an example, below we show landscapes and 3d-structure of one of detected clusters, consisting of four proteins.  
 
 *First three 1-dim landscapes of 4NGE, 5NJ9, 5NJA, 5NJF*  
 <img src="./material_readme_tutorial/dim1_land_cluster.png" alt="drawing" width="800"/>  
@@ -173,6 +153,9 @@ In example below we show landscapes and 3d-structure of one of detected clusters
 *Image source: [RCBS website](https://www.rcsb.org/)*  
 
 
+[//]: # (TODO: most of biggest assemblies cannot be downloaded...is it because of old pdb format? )
+[//]: # ( TODO: add other works on different filtrations and diff homologies...)
+[//]: # ( -invariant by isometries like translation, rotation etc - limitations: encodes shape not )
 
 
 
