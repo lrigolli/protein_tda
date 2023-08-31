@@ -138,7 +138,7 @@ The most computational intensive part of the process is computing PH, which usua
 ## Applications
 The pipeline for protein encoding described above is quite general and can be used to get insights on the topological shapes of a variety of molecular 3d-structures, or in general of 3d-objects. What comes next is finding useful applications.  
 The application discussed here is partitioning protein assemblies according to their topological shapes (recall that PH takes into account number of holes and their size).  Notice that featurizing all protein assemblies can take some time, luckily for applications there is no need to do more than once (for convenience you can download the vectorized proteins, as well as their obtained persistence diagrams and landscapes from [here](https://drive.google.com/drive/folders/1Y1qFJvhtq4VUSEV7cY4jjYMyb_AfFEMX) and move them in output directory of your cloned git project).  
-In [notebook](https://github.com/lrigolli/protein_tda/tree/main/notebooks/protein_classification.ipynb) we define a distance between protein landscapes (distance between two landscapes is defined in terms of area of the difference between the two curves) and use it to compute pairwise dissimilarity of proteins PH in dimension 1 and 2. We then apply HDBSCAN clustering algorithm to group together connected proteins (we infer if a protein is connected by looking at 0-dim PH) whose 1-dim and 2-dim PH are close. In such a way we are able to cluster proteins according to their topological shape.
+In [notebook](https://github.com/lrigolli/protein_tda/tree/main/notebooks/protein_clustering.ipynb) we define a distance between protein landscapes (distance between two landscapes is defined in terms of area of the difference between the two curves) and use it to compute pairwise dissimilarity of proteins PH in dimension 1 and 2. We then apply HDBSCAN clustering algorithm to group together connected proteins (we infer if a protein is connected by looking at 0-dim PH) whose 1-dim and 2-dim PH are close. In such a way we are able to cluster proteins according to their topological shape.
 
 As an example, below we show landscapes and 3d-structure of one of detected clusters, consisting of four proteins.  
 
@@ -151,6 +151,8 @@ As an example, below we show landscapes and 3d-structure of one of detected clus
 *3D structure of 4NGE, 5NJ9, 5NJA, 5NJF*   
 <img src="./material_readme_tutorial/3d_structure_cluster.png" alt="drawing" width="800"/>   
 *Image source: [RCBS website](https://www.rcsb.org/)*  
+
+Second, third and fourth protein are very similar since they share some subunits and most of their residues, so it's no surprise they have similar topological shape (see 3d-structure for a visual check). Instead first protein doesn't share subunits with other three, still its topological shape is similar (see landscapes).
 
 
 [//]: # (TODO: most of biggest assemblies cannot be downloaded...is it because of old pdb format? )
