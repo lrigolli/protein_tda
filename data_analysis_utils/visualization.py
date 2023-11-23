@@ -1,4 +1,8 @@
+import webbrowser
+
 import matplotlib.pyplot as plt
+from IPython.core.display import Image
+from matplotlib import pyplot as plt
 from sklearn.manifold import MDS
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.patches as mpatches
@@ -38,6 +42,42 @@ def apply_mds(title, df_dissim, labels=None, enzyme_color_dict=None, n_comp=3):
     else:
         plt.legend(loc='upper right', prop={'size': 10})
     plt.show()
+
+
+def visualize_protein_group(pdb_ids, display_landscapes=True, display_persistence_diagram=False, display_rcbs_web=True,
+                            display_distances=False, pair_dist_dict_dim=None):
+    max_el = 10
+    if len(pdb_ids) > max_el:
+        print(f'Clusters with many elements are hard to compare visually, only first {max_el} elements are considered.')
+        pdb_ids = pdb_ids[:max_el]
+
+    # Load landscape pictures
+    if display_landscapes:
+        for suffix in ['_land_dim1', '_land_dim2']:
+            for pdb in pdb_ids:
+                print(pdb)
+                display(Image(f"output/landscapes/{pdb}{suffix}.png"))
+                plt.show()
+
+    # Load persistence diagram pictures
+    if display_persistence_diagram:
+        for pdb in pdb_ids:
+            print(pdb)
+            display(Image(f"output/persistence_diagrams/{pdb}.png"))
+
+    # Open links to RCBS website
+    if display_rcbs_web:
+        # pdb_links_3d = [f"https://www.rcsb.org/3d-sequence/{pdb_id}?assemblyId=1" for pdb_id in ex_cluster]
+        pdb_links_structure = [f"https://www.rcsb.org/structure/{pdb_id}?assemblyId=1" for pdb_id in pdb_ids]
+        for url in pdb_links_structure:
+            webbrowser.open(url)
+
+    if display_distances:
+        print("Pairwise distance dim 1")
+        print(f"{pair_dist_dict_dim['dim1'][pdb_ids].loc[pdb_ids]} \n")
+        print("Pairwise distance dim 2")
+        print(f"{pair_dist_dict_dim['dim2'][pdb_ids].loc[pdb_ids]} \n")
+    return
 
 
 """ 
