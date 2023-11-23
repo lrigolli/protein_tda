@@ -8,7 +8,7 @@ def flag_connected_proteins(df_tda_enc, max_perc_threshold=70):
     return df_tda_enc
 
 
-def interesting_homology_filter(df_tda_enc, filter_perc=90):
+def interesting_homology_filter(df_tda_enc, filter_perc=80):
     # Infer if protein is connected from 0 dim homology
     df = flag_connected_proteins(df_tda_enc)
 

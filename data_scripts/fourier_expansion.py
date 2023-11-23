@@ -31,9 +31,11 @@ def evaluate_fourier_series(x, L, fourier_coefs):
             if '0' in coef:
                 y += fourier_coefs[coef]/2
             elif 'a' in coef:
-                y += fourier_coefs[coef] * np.cos(point * np.pi * float(coef[1:])/L)
+                if L != 0:
+                    y += fourier_coefs[coef] * np.cos(point * np.pi * float(coef[1:])/L)
             elif 'b' in coef:
-                y += fourier_coefs[coef] * np.sin(point * np.pi * float(coef[1:])/L)
+                if L != 0:
+                    y += fourier_coefs[coef] * np.sin(point * np.pi * float(coef[1:])/L)
         ys.append(y)
     return ys
 
